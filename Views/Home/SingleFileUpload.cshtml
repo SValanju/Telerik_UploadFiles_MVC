@@ -1,0 +1,91 @@
+﻿@model TelerikFileUpload_MVC.Models.Attachments
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SingleFileUpload</title>
+
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/kendo/2022.2.621/kendo.bootstrap-main.min.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.6.0.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/kendo/2022.2.621/jszip.min.js"></script>
+    <script src="~/Scripts/kendo/2022.2.621/kendo.all.min.js"></script>
+    <script src="~/Scripts/kendo/2022.2.621/kendo.aspnetmvc.min.js"></script>
+</head>
+<body>
+    <div class="container my-5">
+
+        <button type="button" class="btn btn-light mb-3" data-toggle="modal" data-target="#UploadModal"><span class="k-icon k-i-file-add mr-2"></span>Add</button>
+
+        @(Html.Kendo().Grid<TelerikFileUpload_MVC.Models.Attachments>()
+            .Name("filesGrid")
+            .Columns(columns =>
+            {
+                columns.Bound(column => column.fileName)
+                .ClientTemplate("<a href='/Home/Download?id=#: id #'><span class='k-icon k-i-file mr-2'></span>#: fileName #</a>");
+                columns.Bound(column => column.fileDesc);
+                columns.Command(command => { command.Edit(); command.Destroy(); }).Width(100);
+            })
+            .Editable(editable => editable.Mode(GridEditMode.InLine))
+            .Sortable()
+            .Pageable()
+            .DataSource(dataSource => dataSource
+                .Ajax()
+                .PageSize(10)
+                .Model(m => { m.Id(f => f.id); m.Field(f => f.fileName).Editable(false); })
+                .Read(read => read.Action("AttachmentDetails_Read", "Home"))
+                .Update(update=>update.Action("AttachmentDetails_Update", "Home"))
+                .Destroy(update => update.Action("AttachmentDetails_Delete", "Home"))
+            )
+        )
+    </div>
+
+    
+    <div class="modal fade" id="UploadModal" tabindex="-1" aria-labelledby="UploadModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                @using (Html.BeginForm("AttachmentDetails_Insert", "Home", FormMethod.Post))
+                {
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="UploadModal">Add Attachment</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class=" form-group">
+                            @(Html.Kendo().Upload()
+                            .Name("files")
+                            .HtmlAttributes(new { aria_label = "files" })
+                            .Multiple(false)
+                            .Events(events=>events.Progress("onUploadProgress"))
+                        )
+                        </div>
+                        <div class=" form-group">
+                            @Html.LabelFor(m=>m.fileDesc)
+                            @Html.TextAreaFor(m => m.fileDesc, new { @class="form-control"})
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" type="submit" id="reloadFileGrid">Submit</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        function onUploadProgress(e) {
+            console.log("Upload progress :: " + e.percentComplete + "% :: ");
+        }
+    </script>
+</body>
+</html>
