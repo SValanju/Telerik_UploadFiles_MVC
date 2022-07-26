@@ -11,6 +11,7 @@ namespace TelerikFileUpload_MVC.Models
         public int id { get; set; }
         public int vid { get; set; }
 
+        [Required(ErrorMessage ="Required!")]
         [Display(Name ="File Name")]
         public string fileName { get; set; }
 
@@ -19,5 +20,7 @@ namespace TelerikFileUpload_MVC.Models
 
         [Display(Name = "File Path")]
         public string filePath { get; set; }
+
+        public bool status { get; set; }
     }
 }

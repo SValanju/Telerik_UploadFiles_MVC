@@ -33,7 +33,17 @@ namespace TelerikFileUpload_MVC.Controllers
             return View();
         }
 
+        public ActionResult test()
+        {
+            Attachments attachments = new Attachments();
+            attachments.status = true;
+            return View(attachments);
+        }
 
+        public ActionResult form(Attachments attachments)
+        {
+            return RedirectToAction("test", attachments);
+        }
 
 
 

@@ -3053,6 +3053,7 @@
     <Content Include="Scripts\kendo\2022.2.621\cultures\kendo.culture.aa-DJ.min.js.map" />
     <Content Include="Views\Home\SingleFileUpload.cshtml" />
     <Content Include="Views\Home\MultipleUpload.cshtml" />
+    <Content Include="Views\Home\test.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

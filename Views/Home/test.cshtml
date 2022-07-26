@@ -1,0 +1,80 @@
+﻿@model TelerikFileUpload_MVC.Models.Attachments
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>test</title>
+
+
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/kendo/2022.2.621/kendo.bootstrap-main.min.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.6.0.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/kendo/2022.2.621/jszip.min.js"></script>
+    <script src="~/Scripts/kendo/2022.2.621/kendo.all.min.js"></script>
+    <script src="~/Scripts/kendo/2022.2.621/kendo.aspnetmvc.min.js"></script>
+</head>
+<body>
+    <div class="container my-5">
+
+        @using (Html.BeginForm("form", "Home", FormMethod.Post))
+        {
+            if (Model.status == true)
+            {
+                @(Html.Kendo().Switch()
+                    .Name("switch")
+                    .Messages(c => c.Checked("YES").Unchecked("NO"))
+                    .Checked(true)
+                    .Events(ev => ev.Change("onChange"))
+                )
+            }
+            else
+            {
+                @(Html.Kendo().Switch()
+                    .Name("switch")
+                    .Messages(c => c.Checked("YES").Unchecked("NO"))
+                    .Checked(false)
+                    .Events(ev => ev.Change("onChange"))
+                )
+            }
+            @Html.TextBoxFor(m => m.fileName, new { @class = "form-control my-5 d-none", id = "textbox" })
+            @Html.ValidationMessageFor(m=>m.fileName, "", new { @class = "text-danger", id="err" })
+            <button type="submit" class="btn btn-primary">Submit</button>
+        }
+
+
+    </div>
+
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(function () {
+            var switchInstance = $("#switch").data("kendoSwitch");
+            console.log(switchInstance.check());
+
+            if (switchInstance.check() == true) {
+                $('#textbox').removeClass('d-none');
+            }
+            else {
+                $('#textbox').addClass('d-none');
+            }
+        })
+
+        function onChange(e) {
+            console.log(e.checked);
+            $('#err').text('');
+            if (e.checked == true) {
+                $('#textbox').removeClass('d-none');
+            } else {
+                $('#textbox').addClass('d-none');
+            }
+        }
+
+    </script>
+</body>
+</html>
